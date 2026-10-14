@@ -1,0 +1,9 @@
+# terraform
+.terraform/
+*.tfstate
+*.tfstate.*
+crash.log
+*.tfplan
+
+# raw run output: contains account ID, instance IDs, ARNs
+runs/
