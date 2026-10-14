@@ -1,0 +1,63 @@
+{
+  "note": "Sanitized numbers from runs on 2026-10-14, us-east-1, g4dn.xlarge (T4). No account or instance IDs.",
+  "smoke_latency_s": {
+    "EC2": [
+      11.57,
+      8.54,
+      0.47
+    ],
+    "ECS on EC2": [
+      10.06,
+      8.32,
+      0.47
+    ]
+  },
+  "cold_start_min": {
+    "EC2": {
+      "apply": 0.72,
+      "boot_pull_download": 15.8,
+      "engine_init": 0.61
+    },
+    "ECS on EC2": {
+      "apply": 0.95,
+      "boot_pull_download": 11.65,
+      "engine_init": 0.47
+    }
+  },
+  "bench": {
+    "Qwen/Qwen2.5-0.5B-Instruct": {
+      "ttft_ms": 19,
+      "decode_tok_s": 76.2,
+      "concurrency": [
+        1,
+        8,
+        32
+      ],
+      "agg_tok_s": [
+        76.0,
+        479.6,
+        869.9
+      ],
+      "gpu_mem_mib": 13987
+    },
+    "TinyLlama/TinyLlama-1.1B-Chat-v1.0": {
+      "ttft_ms": 18,
+      "decode_tok_s": 73.7,
+      "concurrency": [
+        1,
+        8,
+        32
+      ],
+      "agg_tok_s": [
+        75.3,
+        375.0,
+        null
+      ],
+      "failed": {
+        "32": "HTTP 500 on 32/32"
+      },
+      "gpu_mem_mib": 14007
+    }
+  },
+  "bench_note": "Measured on the instance (no tunnel), 256 tokens/request, ignore_eos, vLLM 0.10.2, T4. TinyLlama c=32 returned HTTP 500 on every request in two rounds and two separate runs; cause not captured."
+}

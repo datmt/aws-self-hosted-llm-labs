@@ -18,6 +18,10 @@ training-oriented and `ml.*` GPU cluster quota is 0 on new accounts.
 identical steady-state latency (~0.47 s for a short completion on a T4). They differ in operations, and
 cold start is dominated by pulling the ~20 GB vLLM image.
 
+![Aggregate throughput](docs/bench-throughput.png)
+
+Measured on the instance: Qwen2.5-0.5B does **76 tok/s** single stream and **870 tok/s** at 32 concurrent requests on one T4.
+
 ## What it runs
 
 - Model: `Qwen/Qwen2.5-0.5B-Instruct` (pulled from Hugging Face at start)
@@ -44,6 +48,13 @@ make e2e LAB=02-ecs-ec2
 PORT=8001 make e2e LAB=02-ecs-ec2
 ```
 
+Throughput benchmark (runs `tests/bench.sh` on the instance via SSM, one or more models in sequence, always destroys):
+
+```bash
+tests/bench-run.sh Qwen/Qwen2.5-0.5B-Instruct TinyLlama/TinyLlama-1.1B-Chat-v1.0
+python3 tools/plots.py        # regenerate docs/*.png from data/results.json (needs matplotlib)
+```
+
 Or step by step:
 
 ```bash
@@ -64,6 +75,10 @@ Makefile              up | test | down | e2e | leftovers
 tests/smoke.sh        /health, /v1/models, one chat call; prints latency and tok/s
 tests/run.sh          open tunnel, wait for health, run smoke.sh
 tests/e2e.sh          full lifecycle with capture; destroy runs in a trap
+tests/bench.sh        TTFT, single-stream decode, throughput at 1/8/32 concurrency (run on the host)
+tests/bench-run.sh    apply, run bench.sh on the instance for each model, destroy
+tools/plots.py        renders docs/*.png from data/results.json
+data/results.json     sanitized numbers behind the charts
 labs/<lab>/main.tf    the infrastructure
 labs/<lab>/tunnel.sh  blocking SSM port-forward to localhost:${LOCAL_PORT:-8000}
 ```
