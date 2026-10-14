@@ -87,3 +87,7 @@ Details and the full issue log are in [REPORT.md](REPORT.md).
 
 No TLS, auth, autoscaling, load balancer or health-based replacement. Local Terraform state. Treat this as a
 lab harness.
+
+## License
+
+[MIT](LICENSE)
